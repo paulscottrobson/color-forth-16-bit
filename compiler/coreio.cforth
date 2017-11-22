@@ -1,0 +1,51 @@
+{ ************************************************************************
+
+						   Basic I/O Functionality
+
+  ************************************************************************ }
+
+:xCursor variable 				{ position of writing cursor } 
+:yCursor variable
+
+:__clearspace variable 			{ used to hold space during cls }
+:__20* 	dup 4* + 4* ;			{ fast multiply }
+
+{ *** The line where you enter stuff *** }
+
+{ writing to the screen only goes this far, then it clears the screen and
+  returns to the top, in some ways it resembles a Spectrum. }
+:entryLine 8 ;					
+
+:__moveScreenCursor yCursor @ __20* xCursor @ + cursor! ;
+
+{ *** Home cursor *** }
+:top 	0 xCursor ! 0 yCursor ! __moveScreenCursor ;
+
+{ *** Clear Screen *** }
+:cls 	$2020 __clearspace ! 	{ 2 spaces in memory written cell/2 times }
+		0 120 for dup __clearspace 2 screen! 2+ next drop top	 ;
+
+{ *** Basic character out. Does not support 13 for CR *** }
+
+:__emit yCursor @ __20* xCursor @ + swap [temp] ! [temp] 1 screen! 1 xCursor +! 	
+		xCursor @ 20 <> if ; then 0 xCursor ! 1 yCursor +! 
+		yCursor @ 8 = if cls then ;
+
+:emit 	__emit __moveScreenCursor ;
+
+{ *** Print Space *** }
+:space  32 emit ;
+
+{ *** Print carriage return *** }
+:cr 	repeat space xCursor @ 0= until ;
+
+{ *** Print tos as a 4 digit hexadecimal number *** }
+
+:__hex1 15 and dup 10 < if 57 + then 9 - emit ;
+:__hex2 dup 16/ __hex1 __hex1 ;
+:h.	space dup 256/ __hex2 __hex2 ;
+		
+{ *** read key, wait for press. *** }
+
+:getkey repeat keyboard@ ?dup until ;
+

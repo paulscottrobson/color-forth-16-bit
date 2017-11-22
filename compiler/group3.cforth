@@ -1,0 +1,70 @@
+{ ************************************************************************
+
+								Group 3 Words
+
+  ************************************************************************ }
+
+{ *** Arithmetic Operators *** }
+
+.if:word+ 	:word+ 	2+	;
+.if:word- 	:word-	2-	;
+.if:-! 		:-! 	swap negate swap +! ;
+
+{ *** Shift. Note right are arithmetic not logical, except >> *** }
+
+.if:4* 		:4* 	2* 2* ;
+.if:8* 		:8* 	4* 2* ;
+.if:16* 	:16* 	4* 4* ;
+.if:256* 	:256* 	16* 16* ;
+.if:16/ 	:16/ 	2/ 2/ 2/ 2/ ;
+.if:256/ 	:256/ 	16/ 16/ ;
+
+.if:>> 		:>> 	2/ $7FFF and ;			{ these two imply logical shifts }
+.if:<< 		:<< 	2* ;
+
+{ *** Stack Operations *** }
+
+.if:rot 	:rot >r >r [temp] ! r> r> [temp] @ ; 
+
+{ *** Variable utility word, pushes next word addr in code on D and returns *** }
+
+.if:[variable] :[variable] r> ;
+
+{ *** Signed/Unsigned Multiply (bitshifter) *** }
+
+.if:*
+
+:__mtemp variable 						{ result of multiply }
+
+:__*									{ bit test,add, shift of multiply. }
+	dup 1 and 							{ check LSB }
+	if swap dup __mtemp +! swap then 	{ if set add alt value to total }
+	>> 									{ shift right }
+	swap 2* swap 						{ shift other left }
+;
+
+:* 	0 __mtemp ! 						{ result }
+	repeat __* dup 0=  until 			{ do bit shifts until rvalue shift 0 }
+	drop drop __mtemp @ ;				{ throw away operands, return result }
+
+{ *** Very inefficient pick *** }
+
+{ but then, don't use pick ! }
+
+.if:pick
+
+:__ctemp variable ; 								{ temp store for pick }
+
+:pick
+	?dup 0= if dup ; then  							{ 0 pick is dup }
+	dup __ctemp !									{ save count }
+	repeat swap >r 1- dup 0= until drop				{ copy n to return stack }
+	dup __ctemp @ swap __ctemp ! 					{ reload count, swap with tos }
+	repeat r> swap 1- dup 0= until drop 			{ copy n back from return stack }
+	__ctemp @ 										{ return answer }	
+;
+
+{
+	Changes list:
+		19-11-2017 :	Group 3 definitions completed.
+}

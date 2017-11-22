@@ -1,0 +1,45 @@
+{ ************************************************************************
+
+								Group 2 Words
+
+  ************************************************************************ }
+
+{ *** Constants *** }
+
+.if:4		:4 		$4 ;
+.if:8		:8 		$8 ;
+.if:10		:10 	$A ;
+.if:16		:16 	$10 ;
+.if:100		:100 	$64 ;
+.if:256		:256 	$100 ;
+
+{ *** Arithmetic Operators *** }
+
+.if:2+ 		:2+ 	2 + ;
+.if:2- 		:2- 	2 - ;
+.if:abs 	:abs 	dup 0< if negate then ;
+.if:max 	:max 	over over - 0< if swap then drop ;
+.if:min 	:min 	over over - 0< 0= if swap then drop ;
+
+{ *** Stack Operators *** }
+
+.if:rdrop	:rdrop 	r> r> drop >r ;
+.if:nip 	:nip 	swap drop ;
+
+{ *** Comparison operators *** }
+
+.if:0> 		:0> 	negate 0< ;
+.if:0>= 	:0>= 	0< not ;
+.if:0<= 	:0<= 	0> not ;
+
+.if:< 		:< 		- 0< ;
+.if:>= 		:>= 	< 0= ;
+.if:> 		:>	 	swap < ;
+.if:<= 		:<= 	> 0= ;
+.if:= 		:= 		- 0= ;
+.if:<> 		:<> 	= 0= ;
+
+{
+	Changes list:
+		19-11-2017 :	Group 2 definitions completed.
+}

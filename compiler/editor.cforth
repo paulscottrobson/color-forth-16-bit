@@ -1,0 +1,90 @@
+{ ************************************************************************
+
+									Editor
+
+  ************************************************************************ }
+
+:editBuffer   array.242 					{ array used for buffer }
+
+:__edCursor variable 						{ Position of the editor cursor }
+:__edTopRow variable 						{ Top row to be edited }
+:__colour variable 							{ upper 2 colour bits }
+:__bufferSize 12 __edTopRow @ - __20* ;		{ actually used size }
+
+{ clear the buffer to all spaces }
+
+:clearEditBuffer 242 for 32 i editBuffer + c! next ;
+
+{ copy the buffer to the screen, position the cursor }
+
+:__updateScreen 
+		__edTopRow @ __20* dup editBuffer __bufferSize screen!
+		__edCursor @ + cursor! ;
+
+{ move the cursor, make it be within limits }
+
+:__moveCursor __edCursor +! 
+	__edCursor @ 
+	0 max  
+	__bufferSize 1- min 
+	__edCursor ! ;
+
+{ backspace }
+
+:__backSpace __edCursor @ 0= if ; then 
+	1 __edCursor -! 
+	__edCursor @ editBuffer + __bufferSize __edCursor @ - 1+
+	for 
+		dup 1+ c@ over c! 1+
+	next drop  32 editBuffer __bufferSize + 1- c! ;
+
+{ insert character at cursor }		
+
+:__insertChar 
+	editBuffer __bufferSize + 
+	__bufferSize __edCursor @ - 1+
+	for dup c@ over 1+ c! 1- next drop
+	63 and __colour @ + __edCursor @ editBuffer + c! 1 __moveCursor ;		
+
+{ scan in given direction recolouring }
+
+:__scan __edCursor @ 						{ stack is dir pos - }
+	dup editBuffer + c@ 63 and 32 = if drop drop ; then
+	repeat 
+		dup 0< if drop drop ; then
+		dup __bufferSize >= if drop drop ; then
+		dup editBuffer + dup c@ 63 and __colour @ + swap c!
+		over + 	dup editBuffer + @ 63 and 32 = 
+	until drop drop ;
+
+{ edit from given row , returns $C0 terminated edit buffer in "Colour 6 bit"}
+
+:editor 	__edTopRow ! 0 __edCursor ! 	{ save top row reset cursor}
+			repeat
+				__updateScreen				
+				getKey 
+				dup 8 =  if __backSpace then
+				dup 20 = if -20 __moveCursor then
+				dup 21 = if 20  __moveCursor then
+				dup 22 = if -1 __moveCursor then
+				dup 23 = if 1  __moveCursor then
+				dup $FC and 16 = if dup 3 and 16* 4* __colour ! 
+												1 __scan -1 __scan then
+				dup 32 >= if dup __insertChar then 
+			13 = until editBuffer __bufferSize over + $C0 swap c! ;
+;
+
+:_main
+	$FEDC
+	cls [codebase] h. here h. 
+	{ sys$reset only when you don't exit _main }
+	clearEditBuffer 
+	space $0F emit $0B emit cr
+	8 editor h.
+	$ABCD
+;
+
+{
+	Changes list:
+		20-11-2017 :	First editor completed.
+}

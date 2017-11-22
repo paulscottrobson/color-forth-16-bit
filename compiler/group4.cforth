@@ -1,0 +1,83 @@
+{ ************************************************************************
+
+								Group 4 Words
+
+  ************************************************************************ }
+
+{ Note: these pairs if/then for/next repeat/until and u/ umod need to be
+        implemented as pairs as they either share code or are complementary }
+
+{ *** Compile a word into code space *** }
+
+.if:here 	:here [codebase] dup @ + ;
+.if:,		:,	here ! 2 [codebase] +! ;
+
+{ *** Get the token which is the next word following this *** }
+
+:tokenid r> dup @ swap word+ >r ;
+
+{ *** if/then conditions *** }
+
+.if:if 	
+
+:__ifref variable 					{ reference to if skip goes here }
+
+::if 		tokenid [bzero] , here __ifref ! -1 , ;
+::then 		__ifref @ ?dup dup here - negate 2- swap ! then 0 __ifref ! ;
+
+{ *** for/next loop *** }
+
+.if:for 	
+
+:__forref variable 					{ for loop reference goes here }
+
+::for 		tokenid	>r , here __forref ! ;
+::next 		__forref @ ?dup 
+				if tokenid [next] , tokenid [bzero] , here - 2- , 
+				then 0 __forref ! ;
+:i 			r> r> dup >r swap >r 1- ;
+
+{ *** repeat/until loop *** }
+
+.if:repeat
+
+:__repeatref variable 				{ repeat loop reference goes here }
+
+::repeat 	here __repeatref ! ;
+::until 	__repeatref @ ?dup if tokenid [bzero] , here - 2- , then 0 __repeatref ! ;
+
+{ *** unsigned division *** }
+
+{ this is okay for casual division but not for high speed division, especially
+  if the Group 1/2 operators are not optimised. Currently division by zero 
+  returns $FFFF as the quotient }
+
+.if:u/
+
+:__quotient variable 							{ quotient value }
+:__remainder variable  							{ remainder value }
+
+:u/												{ Numerator 2nd,Denominator top }
+	0 __quotient !
+	0 __remainder !
+	16 for
+		__remainder @ 2* __remainder !			{ shift remainder left}
+		over 0< if 1 __remainder +! then		{ if numerator -ve bump remainder }
+		swap 2* swap 							{ shift numerator left }
+
+		__quotient @ 2* __quotient ! 			{ shift quotient left }
+		dup __remainder @ swap >= if			{ if remainder >= denominator }
+			dup __remainder -! 					{ subtract denominator from remainder }
+			1 __quotient +! 					{ bump the quotient }
+		then 
+	next
+	drop drop __quotient @						
+;
+
+:umod u/ drop __remainder @ ;
+
+{
+	Changes list:
+		19-11-2017 :	Group 4 definitions completed.
+		21-11-2017 :	Conditions modified for relative-code changes.
+}

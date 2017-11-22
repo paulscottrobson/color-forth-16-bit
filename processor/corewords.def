@@ -1,0 +1,89 @@
+{{@}}
+	W1 = PULLD();W1 = memory[W1]+memory[(W1+1) & 0xFFFF] * 256;PUSHD(W1);
+
+{{c@}}
+	W1 = PULLD();PUSHD(memory[W1]);
+
+{{!}}
+	W1 = PULLD();W2 = PULLD();
+	memory[W1] = W2 & 0xFF;memory[(W1+1) & 0xFFFF] = (W2 >> 1) & 0xFF
+
+{{c!}}
+	W1 = PULLD();W2 = PULLD();
+	memory[W1] = W2 & 0xFF
+
+{{>r}}
+	W1 = PULLD();PUSHR(W1);
+
+{{r>}}
+	W1 = PULLR();PUSHD(W1);
+
+{{;}}
+	PC = PULLR();
+
+{{[literal]}}
+	W1 = memory[PC]+memory[PC+1] * 256;PC = PC + 2;PUSHD(W1);
+
+{{[bzero]}}
+	W1 = memory[PC]+memory[PC+1] * 256;PC = PC + 2
+	W2 = PULLD();if (W2 == 0) PC = (PC + W1) & 0xFFFF;
+
+{{[halt]}}
+	PC = PC - 2;
+
+{{[nop]}}
+	;
+
+{{+}}
+	W1 = PULLD();W2 = PULLD();
+	PUSHD(W1+W2);
+
+{{nand}}
+	W1 = PULLD();W2 = PULLD();
+	PUSHD((W1 & W2) ^ 0xFFFF);
+
+{{2/}}
+	W1 = PULLD();
+	W1 = (W1 >> 1) | (W1 & 0x8000);
+	PUSHD(W1);
+
+{{0=}}
+	W1 = PULLD();
+	W1 = (W1 == 0) ? 0xFFFF:0x0000;
+	PUSHD(W1);
+
+{{[temp]}}
+	PUSHD(SYS_ADDR_TEMP);
+
+{{[codebase]}}
+	PUSHD(SYS_ADDR_CODEBASE);
+
+{{[dictionary]}}
+	PUSHD(SYS_ADDR_DICTBASE);
+
+{{cursor!}}
+	HWISetCursor(PULLD());
+
+{{screen!}}
+	w3 = PULLD();w2 = PULLD();w1 = PULLD();
+	while ((w3 & 0xFF) != 0) {
+		if (w1 >= 0 && w1 < 240) {
+			memory[0x1100+w1] = memory[w2 & 0xFFFF];
+			w1++;
+			w2++;
+		}
+		w3--;
+	}
+
+{{keyboard@}}
+	w1 = HWIGetKey();
+	PUSHD(w1);
+
+{{blockread@}}
+	;
+
+{{[stackreset]}}
+	RSP = DSP = 0;
+
+{{blockwrite!}}
+	;

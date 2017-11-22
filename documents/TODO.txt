@@ -1,0 +1,9 @@
+TODO
+====
+
+abort
+word
+<block> e/edit 
+
+2. 	What to do about *code* words ?
+

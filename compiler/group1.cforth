@@ -1,0 +1,60 @@
+{ ************************************************************************
+
+								Group 1 Words
+
+  ************************************************************************ }
+
+{ *** Basic Constants *** }
+
+.if:0		:0 		$0 ;
+.if:1		:1 		$1 ;
+.if:2		:2 		$2 ;
+.if:-1		:-1 	$FFFF ;
+
+{ *** Basic stack operators. Same functionality as normal FORTH *** }
+
+.if:dup 	:dup	[temp] ! [temp] @ [temp] @ ;
+.if:drop	:drop 	[temp] ! ;
+.if:swap 	:swap 	[temp] ! >r [temp] @ r> ;
+.if:over 	:over 	>r dup r> swap ;
+.if:?dup	:?dup	dup if dup then ;
+
+{ *** Basic binary bitwise arithmetic operators  *** }
+
+.if:not 	:not 	dup nand ;
+.if:and 	:and 	nand not ;
+.if:or 		:or 	not swap not nand ;
+.if:xor 	:xor 	over over not and >r swap not and r> or ;
+
+{ *** Simple unary/binary arithmetic and comparisions *** }
+
+.if:1+ 		:1+ 	1 + ;
+.if:1- 		:1- 	-1 + ;
+.if:negate	:negate	not 1+ ;
+.if:- 		:- 		negate + ;
+.if:2* 		:2* 	dup + ;
+.if:0< 		:0< 	$8000 and 0= 0= ;
+
+{ *** Add to memory *** }
+
+.if:+! 		:+! 	dup [temp] ! @ + [temp] @ ! ;
+
+{ *** Execute the word whose address is on the top of the data stack. *** }
+
+.if:[exec]	:[exec]	>r ;
+
+{ *** [next] take the top of the return stack, subtract one.
+		 if it is non zero (loop back):
+		 	push 0 on the datastack (for sys$bz)
+		 	push the new value on the return stack
+		 if it is zero:
+		 	push non zero on the data stack
+		 	throw away the new value.
+  *** }
+
+.if:[next]	:[next]	r> r> 1- dup if dup >r then swap >r 0= ; 
+
+{
+	Changes list:
+		18-11-2017 :	Group 1 definitions completed.
+}
