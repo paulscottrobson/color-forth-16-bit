@@ -1,3 +1,9 @@
+// *******************************************************************************
+//
+//						These are the core - core words
+//
+// *******************************************************************************
+
 {{@}}
 	W1 = PULLD();W1 = memory[W1]+memory[(W1+1) & 0xFFFF] * 256;PUSHD(W1);
 
@@ -6,7 +12,7 @@
 
 {{!}}
 	W1 = PULLD();W2 = PULLD();
-	memory[W1] = W2 & 0xFF;memory[(W1+1) & 0xFFFF] = (W2 >> 1) & 0xFF
+	memory[W1] = W2 & 0xFF;memory[(W1+1) & 0xFFFF] = (W2 >> 8) & 0xFF
 
 {{c!}}
 	W1 = PULLD();W2 = PULLD();
@@ -19,17 +25,17 @@
 	W1 = PULLR();PUSHD(W1);
 
 {{;}}
-	PC = PULLR();
+	pc = PULLR();
 
 {{[literal]}}
-	W1 = memory[PC]+memory[PC+1] * 256;PC = PC + 2;PUSHD(W1);
+	W1 = memory[pc]+memory[pc+1] * 256;pc = pc + 2;PUSHD(W1);
 
 {{[bzero]}}
-	W1 = memory[PC]+memory[PC+1] * 256;PC = PC + 2
-	W2 = PULLD();if (W2 == 0) PC = (PC + W1) & 0xFFFF;
+	W1 = memory[pc]+memory[pc+1] * 256;pc = pc + 2;
+	W2 = PULLD();if (W2 == 0) pc = (pc + W1) & 0xFFFF;
 
 {{[halt]}}
-	PC = PC - 2;
+	pc = pc - 2;
 
 {{[nop]}}
 	;
@@ -65,25 +71,27 @@
 	HWISetCursor(PULLD());
 
 {{screen!}}
-	w3 = PULLD();w2 = PULLD();w1 = PULLD();
-	while ((w3 & 0xFF) != 0) {
-		if (w1 >= 0 && w1 < 240) {
-			memory[0x1100+w1] = memory[w2 & 0xFFFF];
-			w1++;
-			w2++;
+	W3 = PULLD();W2 = PULLD();W1 = PULLD();
+	while ((W3 & 0xFF) != 0) {
+		if (W1 >= 0 && W1 < 240) {
+			memory[0x1100+W1] = memory[W2 & 0xFFFF];
+			W1++;
+			W2++;
 		}
-		w3--;
+		W3--;
 	}
 
 {{keyboard@}}
-	w1 = HWIGetKey();
-	PUSHD(w1);
+	W1 = HWIGetKey();
+	PUSHD(W1);
 
 {{blockread@}}
 	;
 
 {{[stackreset]}}
-	RSP = DSP = 0;
+	rSP = dSP = 0;
 
 {{blockwrite!}}
 	;
+
+	

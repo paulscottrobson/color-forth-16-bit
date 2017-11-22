@@ -34,7 +34,7 @@ for w in keyWords:
 h.close()
 
 h = open("__vminclude.h","w")
-h.write("#ifndef __VMI\n#define __VMI\n")
+h.write("#ifndef __VMI\n#define __VMI\n\n")
 h.write("#define SYS_ADDR_TEMP (0x{0:04x})\n".format(tempAddress))
 h.write("#define SYS_ADDR_CODEBASE (0x{0:04x})\n".format(codeAddress))
 h.write("#define SYS_ADDR_DICTBASE (0x{0:04x})\n".format(dictAddress))
@@ -44,7 +44,7 @@ h.write("#define KW_COUNT ({0})\n".format(len(keyWords)))
 h.write("\n#ifdef MNEMONICS\n")
 h.write("static const char *_mnemonics[] = { \n")
 h.write(",".join(['"'+x+'"' for x in keyWords]))
-h.write("\n};\n#endif\n\n#endif\n")
+h.write("\n};\n#endif\n")
 h.write("#endif\n")
 h.close()
 

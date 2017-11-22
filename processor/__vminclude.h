@@ -1,5 +1,6 @@
 #ifndef __VMI
 #define __VMI
+
 #define SYS_ADDR_TEMP (0x1000)
 #define SYS_ADDR_CODEBASE (0x1200)
 #define SYS_ADDR_DICTBASE (0x0100)
@@ -33,7 +34,5 @@
 static const char *_mnemonics[] = { 
 "@","c@","!","c!",">r","r>",";","[literal]","[bzero]","[halt]","[nop]","+","nand","2/","0=","[temp]","[codebase]","[dictionary]","cursor!","screen!","keyboard@","blockread@","[stackreset]","blockwrite!"
 };
-#endif
-
 #endif
 #endif

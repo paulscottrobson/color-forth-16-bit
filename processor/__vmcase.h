@@ -3,7 +3,7 @@ case KW_AT:
 case KW_CAT:
      W1 = PULLD();PUSHD(memory[W1]);;break;
 case KW_PLING:
-     W1 = PULLD();W2 = PULLD(); memory[W1] = W2 & 0xFF;memory[(W1+1) & 0xFFFF] = (W2 >> 1) & 0xFF;break;
+     W1 = PULLD();W2 = PULLD(); memory[W1] = W2 & 0xFF;memory[(W1+1) & 0xFFFF] = (W2 >> 8) & 0xFF;break;
 case KW_CPLING:
      W1 = PULLD();W2 = PULLD(); memory[W1] = W2 & 0xFF;break;
 case KW_GREATERR:
@@ -11,13 +11,13 @@ case KW_GREATERR:
 case KW_RGREATER:
      W1 = PULLR();PUSHD(W1);;break;
 case KW_SEMICOLON:
-     PC = PULLR();;break;
+     pc = PULLR();;break;
 case KW_LSQBLITERALRSQB:
-     W1 = memory[PC]+memory[PC+1] * 256;PC = PC + 2;PUSHD(W1);;break;
+     W1 = memory[pc]+memory[pc+1] * 256;pc = pc + 2;PUSHD(W1);;break;
 case KW_LSQBBZERORSQB:
-     W1 = memory[PC]+memory[PC+1] * 256;PC = PC + 2 W2 = PULLD();if (W2 == 0) PC = (PC + W1) & 0xFFFF;;break;
+     W1 = memory[pc]+memory[pc+1] * 256;pc = pc + 2; W2 = PULLD();if (W2 == 0) pc = (pc + W1) & 0xFFFF;;break;
 case KW_LSQBHALTRSQB:
-     PC = PC - 2;;break;
+     pc = pc - 2;;break;
 case KW_LSQBNOPRSQB:
      ;;break;
 case KW_PLUS:
@@ -37,12 +37,12 @@ case KW_LSQBDICTIONARYRSQB:
 case KW_CURSORPLING:
      HWISetCursor(PULLD());;break;
 case KW_SCREENPLING:
-     w3 = PULLD();w2 = PULLD();w1 = PULLD(); while ((w3 & 0xFF) != 0) { if (w1 >= 0 && w1 < 240) { memory[0x1100+w1] = memory[w2 & 0xFFFF]; w1++; w2++; } w3--; };break;
+     W3 = PULLD();W2 = PULLD();W1 = PULLD(); while ((W3 & 0xFF) != 0) { if (W1 >= 0 && W1 < 240) { memory[0x1100+W1] = memory[W2 & 0xFFFF]; W1++; W2++; } W3--; };break;
 case KW_KEYBOARDAT:
-     w1 = HWIGetKey(); PUSHD(w1);;break;
+     W1 = HWIGetKey(); PUSHD(W1);;break;
 case KW_BLOCKREADAT:
      ;;break;
 case KW_LSQBSTACKRESETRSQB:
-     RSP = DSP = 0;;break;
+     rSP = dSP = 0;;break;
 case KW_BLOCKWRITEPLING:
      ;;break;
