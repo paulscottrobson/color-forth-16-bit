@@ -5,6 +5,8 @@ def convert(x):
 	x = x.replace("!","PLING").replace("@","AT").replace("+","PLUS")
 	x = x.replace("/","SLASH").replace(">","GREATER").replace(";","SEMICOLON")
 	x = x.replace("=","EQUALS").replace("[","LSQB").replace("]","RSQB")
+	x = x.replace("-","MINUS").replace("<","LESS").replace("?","QUESTION")
+	x = x.replace("*","STAR")
 	return x
 
 tempAddress = 0x1000

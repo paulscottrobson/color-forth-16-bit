@@ -28,11 +28,33 @@
 #define KW_BLOCKREADAT (21)
 #define KW_LSQBSTACKRESETRSQB (22)
 #define KW_BLOCKWRITEPLING (23)
-#define KW_COUNT (24)
+#define KW_0 (24)
+#define KW_1 (25)
+#define KW_2 (26)
+#define KW_MINUS1 (27)
+#define KW_DUP (28)
+#define KW_DROP (29)
+#define KW_SWAP (30)
+#define KW_OVER (31)
+#define KW_QUESTIONDUP (32)
+#define KW_NOT (33)
+#define KW_AND (34)
+#define KW_OR (35)
+#define KW_XOR (36)
+#define KW_1PLUS (37)
+#define KW_1MINUS (38)
+#define KW_NEGATE (39)
+#define KW_MINUS (40)
+#define KW_2STAR (41)
+#define KW_0LESS (42)
+#define KW_PLUSPLING (43)
+#define KW_LSQBEXECRSQB (44)
+#define KW_LSQBNEXTRSQB (45)
+#define KW_COUNT (46)
 
 #ifdef MNEMONICS
 static const char *_mnemonics[] = { 
-"@","c@","!","c!",">r","r>",";","[literal]","[bzero]","[halt]","[nop]","+","nand","2/","0=","[temp]","[codebase]","[dictionary]","cursor!","screen!","keyboard@","blockread@","[stackreset]","blockwrite!"
+"@","c@","!","c!",">r","r>",";","[literal]","[bzero]","[halt]","[nop]","+","nand","2/","0=","[temp]","[codebase]","[dictionary]","cursor!","screen!","keyboard@","blockread@","[stackreset]","blockwrite!","0","1","2","-1","dup","drop","swap","over","?dup","not","and","or","xor","1+","1-","negate","-","2*","0<","+!","[exec]","[next]"
 };
 #endif
 #endif

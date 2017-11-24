@@ -94,4 +94,76 @@
 {{blockwrite!}}
 	;
 
-	
+// ---------------------------------------------------------------------------
+
+{{0}}
+	PUSHD(0)
+{{1}}
+	PUSHD(1)
+{{2}}
+	PUSHD(2)
+{{-1}}
+	PUSHD(-1)
+
+{{DUP}}
+	W1 = PULLD();PUSHD(W1);PUSHD(W1)
+
+{{DROP}}
+	W1 = PULLD();
+
+{{SWAP}}
+	W1 = PULLD();W2 = PULLD();PUSHD(W1);PUSHD(W2)
+
+{{OVER}}
+	W1 = PULLD();W2 = PULLD();PUSHD(W2);PUSHD(W1);PUSHD(W2)
+
+{{?DUP}}
+	W1 = PULLD();PUSHD(W1);if (W1 != 0) PUSHD(W1)
+
+{{NOT}}
+	W1 = PULLD();PUSHD(W1 ^ 0xFFFF)
+
+{{AND}}
+	W1 = PULLD();W2 = PULLD();PUSHD(W1&W2)
+
+{{OR}}
+	W1 = PULLD();W2 = PULLD();PUSHD(W1|W2)
+
+{{XOR}}
+	W1 = PULLD();W2 = PULLD();PUSHD(W1^W2)
+
+{{1+}}
+	W1 = PULLD();PUSHD(W1+1)	
+
+{{1-}}
+	W1 = PULLD();PUSHD(W1-1)	
+
+{{NEGATE}}
+	W1 = PULLD();PUSHD(-W1)	
+
+{{-}}
+	W1 = PULLD();W2 = PULLD();PUSHD(W2-W1)
+
+{{2*}}	
+	W1 = PULLD();PUSHD(W1 << 1)
+
+{{0<}}	
+	W1 = PULLD();PUSHD((W1 & 0x8000) ? 0x8000: 0x0000)
+
+{{+!}}
+	W1 = PULLD();
+	W2 = memory[W1]+memory[W1+1]*256+PULLD();
+	memory[W1] = W2 & 0xFF;
+	memory[W1+1] = (W2 >> 8) & 0xFF;
+
+{{[EXEC]}}	
+	W1 = PULLD();PUSHR(pc);pc = W1
+
+{{[NEXT]}}	
+	W1 = (PULLR() - 1) & 0xFFFF;
+	if (W1 != 0) {
+		PUSHD(0);
+		PUSHR(W1);
+	} else {
+		PUSHD(1);
+	}

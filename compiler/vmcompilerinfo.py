@@ -3,7 +3,7 @@
 #
 class VMCompilerInfo:
   def getWordList(self):
-    return ["@","c@","!","c!",">r","r>",";","[literal]","[bzero]","[halt]","[nop]","+","nand","2/","0=","[temp]","[codebase]","[dictionary]","cursor!","screen!","keyboard@","blockread@","[stackreset]","blockwrite!"]
+    return ["@","c@","!","c!",">r","r>",";","[literal]","[bzero]","[halt]","[nop]","+","nand","2/","0=","[temp]","[codebase]","[dictionary]","cursor!","screen!","keyboard@","blockread@","[stackreset]","blockwrite!","0","1","2","-1","dup","drop","swap","over","?dup","not","and","or","xor","1+","1-","negate","-","2*","0<","+!","[exec]","[next]"]
   def getDictionaryBase(self):
     return 0x0100
   def getCodeBase(self):
